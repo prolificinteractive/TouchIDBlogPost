@@ -1,0 +1,113 @@
+# global .gitignore
+# check out https://github.com/github/gitignore
+
+*~
+
+# files for xcode 5
+*.xccheckout
+
+# Cocoapods
+Pods/
+
+### random Mac/PC folder junk
+
+*DS_Store
+Thumbs.db
+._*
+
+
+### Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+
+### temporary files
+
+*.tmp
+*.bak
+
+
+### logs and dbs
+
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+
+### compressed files
+### (unpack and commit uncompressed files)
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+
+### IDE files
+
+# TextMate:
+*.tmproj
+*.tmproject
+tmtags
+
+# BBEdit:
+*.bbprojectd
+
+# Eclipse:
+.project
+.classpath
+
+# IDEA Products: IntelliJ, PHPStorm
+*.iml
+*.ipr
+*.iws
+.idea/
+
+### Flash Dev
+
+*.air
+*.p12
+
+
+### Web Dev
+
+.sass-cache/
+.powenv
+
+### iOS/Mac dev
+
+*~.nib
+*.swp
+
+# files created by Xcode 3 or older
+*.pbxuser
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcclassmodel/
+
+# files created by Xcode 4
+xcuserdata/
+
+# build products
+*.build/
+build/
+DerivedData/
+
+# Appledoc
+docset-installed.txt
+
+### Android dev
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
