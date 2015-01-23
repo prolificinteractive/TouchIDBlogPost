@@ -34,7 +34,7 @@ class PITouchIDManager {
                 } else {
                     if let fail = fail {
                         dispatch_async(dispatch_get_main_queue()) {
-                            fail(error!)
+                            fail(evaluationError!)
                         }
                     }
                 }
