@@ -28,33 +28,33 @@ class ViewController: UIViewController {
     func authenticateUser() {
         let touchIDManager : PITouchIDManager = PITouchIDManager()
 
-        touchIDManager.authenticateUser({ () -> () in
+        touchIDManager.authenticateUser(success: { () -> () in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 self.loadDada()
             })
-            }, { (evaluationError: NSError) -> () in
+            }, failure: { (evaluationError: NSError) -> () in
                 switch evaluationError.code {
                 case LAError.SystemCancel.rawValue:
-                    println("Authentication cancelled by the system")
+                    print("Authentication cancelled by the system")
                     self.statusLabel.text = "Authentication cancelled by the system"
                 case LAError.UserCancel.rawValue:
-                    println("Authentication cancelled by the user")
+                    print("Authentication cancelled by the user")
                     self.statusLabel.text = "Authentication cancelled by the user"
                 case LAError.UserFallback.rawValue:
-                    println("User wants to use a password")
+                    print("User wants to use a password")
                     self.statusLabel.text = "User wants to use a password"
                     // We show the alert view in the main thread (always update the UI in the main thread)
                     NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                         self.showPasswordAlert()
                     })
                 case LAError.TouchIDNotEnrolled.rawValue:
-                    println("TouchID not enrolled")
+                    print("TouchID not enrolled")
                     self.statusLabel.text = "TouchID not enrolled"
                 case LAError.PasscodeNotSet.rawValue:
-                    println("Passcode not set")
+                    print("Passcode not set")
                     self.statusLabel.text = "Passcode not set"
                 default:
-                    println("Authentication failed")
+                    print("Authentication failed")
                     self.statusLabel.text = "Authentication failed"
                     NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                         self.showPasswordAlert()
@@ -73,11 +73,13 @@ class ViewController: UIViewController {
 
         // We define the actions to add to the alert controller
         let cancelAction : UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
-            println(action)
+            print(action)
         }
         let doneAction : UIAlertAction = UIAlertAction(title: "Done", style: .Default) { (action) -> Void in
             let passwordTextField = alertController.textFields![0] as UITextField
-            self.login(passwordTextField.text)
+            if let text = passwordTextField.text {
+                self.login(text)
+            }
         }
         doneAction.enabled = false
 

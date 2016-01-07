@@ -20,11 +20,11 @@ class PITouchIDManager {
         // Get the current authentication context
         let context : LAContext = LAContext()
         var error : NSError?
-        var myLocalizedReasonString : NSString = "Authentification is required"
+        let myLocalizedReasonString : NSString = "Authentification is required"
 
         // Check if the device is compatible with TouchID and can evaluate the policy.
         if context.canEvaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, error: &error) {
-            context.evaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString, reply: { (success : Bool, evaluationError : NSError?) -> Void in
+            context.evaluatePolicy(LAPolicy.DeviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString as String, reply: { (success : Bool, evaluationError : NSError?) -> Void in
                 if success {
                     if let succeed = succeed {
                         dispatch_async(dispatch_get_main_queue()) {
