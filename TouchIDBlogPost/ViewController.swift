@@ -20,43 +20,42 @@ class ViewController: UIViewController {
         authenticateUser()
     }
 
-
     func setupData() {
         self.statusLabel.text = "Unknown user"
     }
 
     func authenticateUser() {
-        let touchIDManager : PITouchIDManager = PITouchIDManager()
+        let touchIDManager = PITouchIDManager()
 
         touchIDManager.authenticateUser(success: { () -> () in
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+            OperationQueue.main.addOperation({ () -> Void in
                 self.loadDada()
             })
             }, failure: { (evaluationError: NSError) -> () in
                 switch evaluationError.code {
-                case LAError.SystemCancel.rawValue:
+                case LAError.Code.systemCancel.rawValue:
                     print("Authentication cancelled by the system")
                     self.statusLabel.text = "Authentication cancelled by the system"
-                case LAError.UserCancel.rawValue:
+                case LAError.Code.userCancel.rawValue:
                     print("Authentication cancelled by the user")
                     self.statusLabel.text = "Authentication cancelled by the user"
-                case LAError.UserFallback.rawValue:
+                case LAError.Code.userFallback.rawValue:
                     print("User wants to use a password")
                     self.statusLabel.text = "User wants to use a password"
                     // We show the alert view in the main thread (always update the UI in the main thread)
-                    NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                    OperationQueue.main.addOperation({ () -> Void in
                         self.showPasswordAlert()
                     })
-                case LAError.TouchIDNotEnrolled.rawValue:
+                case LAError.Code.touchIDNotEnrolled.rawValue:
                     print("TouchID not enrolled")
                     self.statusLabel.text = "TouchID not enrolled"
-                case LAError.PasscodeNotSet.rawValue:
+                case LAError.Code.passcodeNotSet.rawValue:
                     print("Passcode not set")
                     self.statusLabel.text = "Passcode not set"
                 default:
                     print("Authentication failed")
                     self.statusLabel.text = "Authentication failed"
-                    NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                    OperationQueue.main.addOperation({ () -> Void in
                         self.showPasswordAlert()
                     })
                 }
@@ -69,38 +68,40 @@ class ViewController: UIViewController {
 
     func showPasswordAlert() {
         // New way to present an alert view using UIAlertController
-        let alertController : UIAlertController = UIAlertController(title:"TouchID Demo" , message: "Please enter password", preferredStyle: .Alert)
+        let alertController = UIAlertController(title:"TouchID Demo",
+                                                message: "Please enter password",
+                                                preferredStyle: .alert)
 
         // We define the actions to add to the alert controller
-        let cancelAction : UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) -> Void in
             print(action)
         }
-        let doneAction : UIAlertAction = UIAlertAction(title: "Done", style: .Default) { (action) -> Void in
+        let doneAction = UIAlertAction(title: "Done", style: .default) { (action) -> Void in
             let passwordTextField = alertController.textFields![0] as UITextField
             if let text = passwordTextField.text {
                 self.login(text)
             }
         }
-        doneAction.enabled = false
+        doneAction.isEnabled = false
 
         // We are customizing the text field using a configuration handler
-        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+        alertController.addTextField { (textField) -> Void in
             textField.placeholder = "Password"
-            textField.secureTextEntry = true
+            textField.isSecureTextEntry = true
 
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue(), usingBlock: { (notification) -> Void in
-                doneAction.enabled = textField.text != ""
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main, using: { (notification) -> Void in
+                doneAction.isEnabled = textField.text != ""
             })
         }
         alertController.addAction(cancelAction)
         alertController.addAction(doneAction)
 
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
             // Nothing to do here
         }
     }
 
-    func login(password: String) {
+    func login(_ password: String) {
         if password == "prolific" {
             self.loadDada()
         } else {
