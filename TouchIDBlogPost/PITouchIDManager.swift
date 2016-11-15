@@ -27,18 +27,17 @@ class PITouchIDManager {
 
         context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics,
                                localizedReason: myLocalizedReasonString,
-                               reply: { (status: Bool, evaluationError: NSError?) -> Void in
+                               reply: { (status, error) in
                                 if status {
                                     DispatchQueue.main.async {
                                         success()
                                     }
                                 } else {
                                     DispatchQueue.main.async {
-                                        failure(evaluationError!)
+                                        failure(error as! NSError)
                                     }
                                 }
-                                } as! (Bool, Error?) -> Void)
-        
+        })
     }
     
     func fetchImage(failure fail : ((NSError) -> ())? = nil,
